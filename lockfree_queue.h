@@ -6,6 +6,7 @@
 
 #define likely(x) __builtin_expect(!!(x), 1)
 #define unlikely(x) __builtin_expect(!!(x), 0)
+#define LOCKFREE_CACHELINE_BYTES 64
 
 using namespace std;
 
@@ -118,7 +119,10 @@ private:
 
 private:
 	atomic_ulong head_;
+	static const int PaddingSize = LOCKFREE_CACHELINE_BYTES - sizeof(unsigned long);
+	char padding1[PaddingSize];
 	atomic_ulong tail_;
+	char padding2[PaddingSize];
 };
 
 
